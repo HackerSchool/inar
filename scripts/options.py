@@ -24,7 +24,6 @@ class Parser:
             "default": default,
             "parse": parse,
         }
-        pass
 
     def help(self):
         """Returns a help message listing the available options."""
@@ -34,6 +33,7 @@ class Parser:
         longest_len = max([len(name) for name in self.options.keys()])
 
         for name, option in self.options.items():
+            # Whitespace added to align the descriptions.
             ws = " " * (longest_len - len(name))
             msg += f"  --{name}{ws}  {option['description']}"
             if option["default"] is not None:
@@ -43,10 +43,13 @@ class Parser:
 
     def parse(self):
         """Parses the options added until now and returns their values."""
+
+        # Initially, get the default values.
         values = {}
         for name, option in self.options.items():
             values[name] = option["default"]
 
+        # Parse the command line arguments.
         previous = None
         for arg in (sys.argv[1:] + [""]):
             if arg.startswith("--") or arg == "":
@@ -67,6 +70,7 @@ class Parser:
                     else:
                         print(f"Unknown option --{name}")
             elif previous is not None:
+                # Parse the option's value.
                 value = self.options[previous]["parse"](arg)
                 if value is None:
                     print(f"Invalid value '{arg}' for --{previous}")
