@@ -71,7 +71,7 @@ class Parser:
                 if value is None:
                     print(f"Invalid value '{arg}' for --{previous}")
                 else:
-                    values[previous]
+                    values[previous] = value
                 previous = None
             else:
                 print(f"Expected option, found '{arg}'")
