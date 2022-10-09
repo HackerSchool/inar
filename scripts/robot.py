@@ -12,7 +12,9 @@ class Robot:
         self.state = State()
         self.frame = None
         self.socket = None
-        self.lookAtTarget = (0, 0, 10)
+
+        # Initial target state.
+        self.lookAt((0, 0, 10))
 
     def lookAt(self, point):
         """
@@ -21,7 +23,7 @@ class Robot:
         is forward. One unit is equal to the distance between the eyes' centers.
         The position between the eyes is (0, 0, 0).
         """
-        pass
+        self.lookAtTarget = point
 
     def update(self, deltaT):
         """
