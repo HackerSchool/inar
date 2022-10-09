@@ -2,10 +2,10 @@ from enum import Enum
 
 class Servo(Enum):
     """Enum for identifying servos."""
-    L_EYE_X = 0
-    L_EYE_Y = 1
-    R_EYE_X = 2
-    R_EYE_Y = 3
+    L_EYE_X = 0 # -90º to 90º
+    L_EYE_Y = 1 # -90º to 90º
+    R_EYE_X = 2 # -90º to 90º
+    R_EYE_Y = 3 # -90º to 90º
 
 class State:
     """Holds the state of the robot's servos."""
