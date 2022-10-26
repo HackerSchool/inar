@@ -115,7 +115,7 @@ def rotate( mesh, angle_x,angle_y,angle_z, rot_x, rot_y, rot_z ):
 
 def render( faces, x_rot, y_rot, z_rot, colors, ray ):
     
-    screen.fill( 0x112233 ) 
+    """ screen.fill( 0x112233 ) 
 
     for face in sorted( rotate( faces, x_rot, y_rot, z_rot, 'x', 'y', 'z' ), key = sort ):
 
@@ -136,13 +136,37 @@ def render( faces, x_rot, y_rot, z_rot, colors, ray ):
             surface = screen,
             color = lerp_color( ( n.dot( ray ) + 1 ) / 2, *colors ),
             points = polygon,
-        )
+        ) """
 
     ROTATE_SPEED = 0.02
  
     _quit = False
     angle_x = angle_y = angle_z = 0
     while not _quit:
+
+        screen.fill((0,0,0))
+
+        for face in sorted( rotate( faces, angle_x, angle_y, angle_z, 'x', 'y', 'z' ), key = sort ):
+
+            vertex1 = ( face[0], face[1], face[2] )
+            vertex2 = ( face[3], face[4], face[5] )
+            vertex3 = ( face[6], face[7], face[8] )
+
+            polygon = [ 
+                project3d_to_2d( pygame.math.Vector3( vertex ) ) 
+                for vertex in [ vertex1, vertex2, vertex3 ]  
+            ]
+
+            if is_clockwise( polygon ): continue
+
+            n = surface_normal( [ vertex1, vertex2, vertex3 ] )
+
+            pygame.draw.polygon(
+                surface = screen,
+                color = lerp_color( ( n.dot( ray ) + 1 ) / 2, *colors ),
+                points = polygon,
+            )
+
 
         for event in  pygame.event.get():
 
@@ -173,10 +197,10 @@ def render( faces, x_rot, y_rot, z_rot, colors, ray ):
 
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode( ( 700, 700 ) )
+    screen = pygame.display.set_mode( ( 1000, 1000 ) )
     clock = pygame.time.Clock()
 
-    FPS = 60
+    FPS = 140
 
     # test change this value to rotate the teapot ( it is in radians )
     # z_positive = counter_clockwise
