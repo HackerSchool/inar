@@ -2,10 +2,10 @@ from xml.etree.ElementTree import PI
 from stl import mesh
 import pygame
 import numpy
-import math
 
 
-def project3d_to_2d( vertex ):
+def project3d_to_2d( vertex, offset ):
+    # Original offset is 350
 
     scale = 25
     vertex = vertex * scale
@@ -13,8 +13,8 @@ def project3d_to_2d( vertex ):
     x, y, z = vertex
 
     r = pygame.math.Vector2(
-        x - y + 350,
-        x + y - z + 350
+        x - y + offset,
+        x + y - z + offset
     )
 
     return r
@@ -65,95 +65,49 @@ def sort(face):
     return m[0] + m[1] + m[2]*2
 
 
-def rotate( mesh, angle_x,angle_y,angle_z, rot_x, rot_y, rot_z ):
+def rotate( mesh, angle_x,angle_y,angle_z):
 
     for face in mesh:
 
-        # Rotation for X
         vertex1 = pygame.math.Vector3( (face[0], face[1], face[2]) )
         vertex2 = pygame.math.Vector3( (face[3], face[4], face[5]) )
         vertex3 = pygame.math.Vector3( (face[6], face[7], face[8]) )
         
-        vertex1 = getattr( vertex1, 'rotate_{0}_rad'.format( rot_x ) )( angle_x )
-        vertex2 = getattr( vertex2, 'rotate_{0}_rad'.format( rot_x ) )( angle_x )
-        vertex3 = getattr( vertex3, 'rotate_{0}_rad'.format( rot_x ) )( angle_x )
-
-        """  yield(  vertex1[0], vertex1[1], vertex1[2],
-                vertex2[0], vertex2[1], vertex2[2],
-                vertex3[0], vertex3[1], vertex3[2], ) """
+        # Rotation for X
+        vertex1 = getattr( vertex1, 'rotate_{0}_rad'.format( 'x') )( angle_x )
+        vertex2 = getattr( vertex2, 'rotate_{0}_rad'.format( 'x' ) )( angle_x )
+        vertex3 = getattr( vertex3, 'rotate_{0}_rad'.format( 'x' ) )( angle_x )
 
         # Rotation for Y
-        vertex4 = pygame.math.Vector3( (face[0], face[1], face[2]) )
-        vertex5 = pygame.math.Vector3( (face[3], face[4], face[5]) )
-        vertex6 = pygame.math.Vector3( (face[6], face[7], face[8]) )
-
-        vertex1 = getattr( vertex1, 'rotate_{0}_rad'.format( rot_y ) )( angle_y )
-        vertex2 = getattr( vertex2, 'rotate_{0}_rad'.format( rot_y ) )( angle_y )
-        vertex3 = getattr( vertex3, 'rotate_{0}_rad'.format( rot_y ) )( angle_y )
-
-        """ yield(  vertex4[0], vertex4[1], vertex4[2],
-                vertex5[0], vertex5[1], vertex5[2],
-                vertex6[0], vertex6[1], vertex6[2], ) """
+        vertex1 = getattr( vertex1, 'rotate_{0}_rad'.format( 'y' ) )( angle_y )
+        vertex2 = getattr( vertex2, 'rotate_{0}_rad'.format( 'y' ) )( angle_y )
+        vertex3 = getattr( vertex3, 'rotate_{0}_rad'.format( 'y' ) )( angle_y )
 
         # Rotation for Z
-        vertex7 = pygame.math.Vector3( (face[0], face[1], face[2]) )
-        vertex8 = pygame.math.Vector3( (face[3], face[4], face[5]) )
-        vertex9 = pygame.math.Vector3( (face[6], face[7], face[8]) )
-
-        vertex1 = getattr( vertex1, 'rotate_{0}_rad'.format( rot_z ) )( angle_z )
-        vertex2 = getattr( vertex2, 'rotate_{0}_rad'.format( rot_z ) )( angle_z )
-        vertex3 = getattr( vertex3, 'rotate_{0}_rad'.format( rot_z ) )( angle_z )
-
-        """ yield ( vertex7[0], vertex7[1], vertex7[2],
-                vertex8[0], vertex8[1], vertex8[2],
-                vertex9[0], vertex9[1], vertex9[2], ) """
+        vertex1 = getattr( vertex1, 'rotate_{0}_rad'.format( 'z' ) )( angle_z )
+        vertex2 = getattr( vertex2, 'rotate_{0}_rad'.format( 'z' ) )( angle_z )
+        vertex3 = getattr( vertex3, 'rotate_{0}_rad'.format( 'z' ) )( angle_z )
                 
         yield(  vertex1[0], vertex1[1], vertex1[2],
                 vertex2[0], vertex2[1], vertex2[2],
                 vertex3[0], vertex3[1], vertex3[2], )
 
 
-def render( faces, x_rot, y_rot, z_rot, colors, ray ):
-    
-    """ screen.fill( 0x112233 ) 
+def rotate_eye(faces, angle_x, angle_y, angle_z, offset, colors, ray):
+        
+        # Center for rotation
+        """ for i in range(0, len(faces.vectors)):
+            for j in range(0, len(faces.vectors[i])):
+                faces.vectors[i][j] = faces.vectors[i][j] - numpy.array(offset) """
 
-    for face in sorted( rotate( faces, x_rot, y_rot, z_rot, 'x', 'y', 'z' ), key = sort ):
-
-        vertex1 = ( face[0], face[1], face[2] )
-        vertex2 = ( face[3], face[4], face[5] )
-        vertex3 = ( face[6], face[7], face[8] )
-
-        polygon = [ 
-            project3d_to_2d( pygame.math.Vector3( vertex ) ) 
-            for vertex in [ vertex1, vertex2, vertex3 ]  
-        ]
-
-        if is_clockwise( polygon ): continue
-
-        n = surface_normal( [ vertex1, vertex2, vertex3 ] )
-
-        pygame.draw.polygon(
-            surface = screen,
-            color = lerp_color( ( n.dot( ray ) + 1 ) / 2, *colors ),
-            points = polygon,
-        ) """
-
-    ROTATE_SPEED = 0.02
- 
-    _quit = False
-    angle_x = angle_y = angle_z = 0
-    while not _quit:
-
-        screen.fill((0,0,0))
-
-        for face in sorted( rotate( faces, angle_x, angle_y, angle_z, 'x', 'y', 'z' ), key = sort ):
+        for face in sorted( rotate( faces, angle_x, angle_y, angle_z), key = sort ):
 
             vertex1 = ( face[0], face[1], face[2] )
             vertex2 = ( face[3], face[4], face[5] )
             vertex3 = ( face[6], face[7], face[8] )
 
             polygon = [ 
-                project3d_to_2d( pygame.math.Vector3( vertex ) ) 
+                project3d_to_2d( pygame.math.Vector3( vertex ), offset=offset ) 
                 for vertex in [ vertex1, vertex2, vertex3 ]  
             ]
 
@@ -167,7 +121,40 @@ def render( faces, x_rot, y_rot, z_rot, colors, ray ):
                 points = polygon,
             )
 
+        # Reposition again for the right position
+        """ for i in range(0, len(faces.vectors)):
+            for j in range(0, len(faces.vectors[i])):
+                faces.vectors[i][j] = faces.vectors[i][j] + numpy.array(offset) """
 
+def render( right_faces, left_faces, right_offset, left_offset,colors, ray ):
+    
+    """ # Setting the Position of the Right Eye
+    for i in range(0, len(right_faces.vectors)):
+            for j in range(0, len(right_faces.vectors[i])):
+                right_faces.vectors[i][j] = right_faces.vectors[i][j] - numpy.array(right_offset)
+
+    # Setting the Position of the Left Eye
+    for i in range(0, len(left_faces.vectors)):
+            for j in range(0, len(left_faces.vectors[i])):
+                left_faces.vectors[i][j] = left_faces.vectors[i][j] - numpy.array(left_offset) """
+
+    ROTATE_SPEED = 0.02
+ 
+    _quit = False
+    angle_x = angle_y = angle_z = 0
+    while not _quit:
+
+        # screen.fill((0,0,0))
+        screen.fill( 0x112233 ) 
+
+        # Left Eye Rotations
+        rotate_eye(left_faces, offset=left_offset,angle_x=angle_x,angle_y= angle_y, angle_z= angle_z,colors=colors, ray=ray)
+
+        # Right Eye Rotations
+        rotate_eye(right_faces, offset=right_offset,angle_x=-angle_x,angle_y= -angle_y, angle_z= -angle_z,colors=colors, ray=ray)
+
+
+        # Pygame Events (Quitting and Using Keyboard)
         for event in  pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -189,7 +176,7 @@ def render( faces, x_rot, y_rot, z_rot, colors, ray ):
             if keys[pygame.K_e]:
                 angle_z += ROTATE_SPEED  
 
-
+        # Updating all the Window
         clock.tick( FPS )
         pygame.display.update()
 
@@ -197,19 +184,17 @@ def render( faces, x_rot, y_rot, z_rot, colors, ray ):
 
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode( ( 1000, 1000 ) )
+    screen = pygame.display.set_mode( ( 800, 800 ) )
     clock = pygame.time.Clock()
 
-    FPS = 140
+    FPS = 60
 
-    # test change this value to rotate the teapot ( it is in radians )
-    # z_positive = counter_clockwise
-    
-    x_rot = (math.pi) / 2
-    y_rot = (math.pi) / 2
-    z_rot = 0
+    BASE_OFFSET= 350
 
-    # test change these color to modify colors on teapot.
+    left_eye_offset = BASE_OFFSET + 100
+    right_eye_offset = BASE_OFFSET + 0
+
+    # test change these color to modify colors on eyes.
     # (one of the color is the shadow color)
     color_a = ( 0,   0,  0 )
     color_b = ( 200, 100, 0 )
@@ -219,11 +204,12 @@ if __name__ == '__main__':
 
     # you can download the teapot stl file at: https://en.wikipedia.org/wiki/STL_(file_format)
     # remember to rename to to teapot.stl
-    faces = mesh.Mesh.from_file( './meshes/teapot.stl' )
+    right_eye = mesh.Mesh.from_file( './meshes/new_eye.stl' )
+    left_eye = mesh.Mesh.from_file( './meshes/new_eye.stl' )
     # of course you can find other stl files to test but you might have to scale and 
     # offset the projection to get a good view of it. see project3d_to_2d.
 
-    render( faces, x_rot = x_rot, y_rot = y_rot , z_rot = z_rot, colors = ( color_a, color_b ), ray = ray )
+    render( right_faces=right_eye, left_faces=left_eye, left_offset=left_eye_offset, right_offset=right_eye_offset ,colors = ( color_a, color_b ), ray = ray )
 
     # NOTE: you can also write your own projection.
     #       implement it in project3d_to_2d (you might have to modify sort method after that)
