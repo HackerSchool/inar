@@ -1,21 +1,28 @@
 from options import Parser
 from robot import Robot
+from protocol import Protocol
 from constants import UPDATE_RATE
+
+import cv2
 import time
 
 def run(options):
     """The main entry point for the controller."""
 
     robot = Robot()
+    protocol = Protocol(not options["viewer"], not options["receiver"])
 
     if not options["single"]:
         # Setup connection.
         if options["ip"] is not None:
-            robot.connect(options["ip"], options["port"])
+            protocol.connect(options["ip"], options["port"])
         else:
-            robot.listen(options["port"])
-    elif options["receiver"]:
-        raise RuntimeError("Cannot receive in single mode.")
+            protocol.listen(options["port"])
+    elif options["receiver"] or options["viewer"]:
+        raise RuntimeError("In single mode state and frames can't be received.")
+
+    if not options["viewer"]:
+        cap = cv2.VideoCapture(0)
 
     # Then, run the main loop.
     start = time.time()
@@ -26,18 +33,29 @@ def run(options):
         acc += now - start
         start = now
 
-        # If we are the receiver, receive the new state.
-        # Otherwise, if enough time has passed, update the state.
-        if options["receiver"]:
-            robot.receive()
-        elif acc >= 1 / UPDATE_RATE:
+        # Only update when enough time has passed.
+        if acc >= 1 / UPDATE_RATE:
             acc -= 1 / UPDATE_RATE
 
-            robot.update(1 / UPDATE_RATE)
+            # If we're not receiving frames, capture one.
+            if not options["viewer"]:
+                success, frame = cap.read()
+                if not success:
+                    raise RuntimeError("Failed to capture frame.")
+                robot.setFrame(frame)
             
-            # Send the new state to the receiver, if any.
+            # Communicate with the other side if we're not in single mode.
             if not options["single"]:
-                robot.send()
+                protocol.update(robot)
+
+            # Update the robot state, if we're not receiving it.
+            if not options["receiver"]:
+                frame = robot.getFrame()
+                # TODO: apply preprocessing to the frame.
+                # TODO: call the decision code depending on the mode (stalk, imitation, etc)
+                # TODO: if necessary, mix the two states (imitation + predefined emotions)
+                # TODO: update the robot target state.
+                robot.update(1 / UPDATE_RATE)
 
 if __name__ == "__main__":
     parser = Parser()
@@ -46,7 +64,8 @@ if __name__ == "__main__":
     parser.add("servos", "Controls the servos.", default=False)
     parser.add("ip", "The IP address to connect to.")
     parser.add("port", "The port to listen/connect to.", default=10000)
-    parser.add("receiver", "If set, will receive state instead of sending.", default=False)
+    parser.add("receiver", "If set, will receive state instead of calculating it.", default=False)
+    parser.add("viewer", "If set, will receive frames instead of capturing them.", default=False)
     parser.add("single", "If set, won't listen for connections.", default=False)
     options = parser.parse()
     if options["help"]:
