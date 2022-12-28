@@ -1,7 +1,6 @@
-from options import Parser
-from robot import Robot
-from protocol import Protocol
+from core import Parser, Robot, Protocol
 from constants import UPDATE_RATE
+from control import MimicBehaviour
 
 import cv2
 import time
@@ -11,6 +10,9 @@ def run(options):
 
     robot = Robot()
     protocol = Protocol(not options["viewer"], not options["receiver"])
+    behaviour = MimicBehaviour()
+
+    # TODO: allow changing the mode of the robot, e.g. using the protocol
 
     if not options["single"]:
         # Setup connection.
@@ -51,11 +53,12 @@ def run(options):
             # Update the robot state, if we're not receiving it.
             if not options["receiver"]:
                 frame = robot.getFrame()
-                # TODO: apply preprocessing to the frame.
-                # TODO: call the decision code depending on the mode (stalk, imitation, etc)
-                # TODO: if necessary, mix the two states (imitation + predefined emotions)
-                # TODO: update the robot target state.
+                robot.setTargetState(behaviour.update(robot))
                 robot.update(1 / UPDATE_RATE)
+
+            # Update servos
+            if options["servos"]:
+                pass # TODO: update the servos.
 
 if __name__ == "__main__":
     parser = Parser()
