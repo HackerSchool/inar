@@ -1,6 +1,6 @@
-from options import Parser
-from robot import Robot
-from protocol import Protocol
+from core import Parser
+from core import Robot
+from core import Protocol
 from constants import UPDATE_RATE
 
 import cv2
@@ -56,6 +56,10 @@ def run(options):
                 # TODO: if necessary, mix the two states (imitation + predefined emotions)
                 # TODO: update the robot target state.
                 robot.update(1 / UPDATE_RATE)
+
+            # Update servos
+            if options["servos"]:
+                pass # TODO: update the servos.
 
 if __name__ == "__main__":
     parser = Parser()
