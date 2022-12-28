@@ -53,7 +53,6 @@ def run(options):
             # Update the robot state, if we're not receiving it.
             if not options["receiver"]:
                 frame = robot.getFrame()
-                # TODO: apply preprocessing to the frame.
                 robot.setTargetState(behaviour.update(robot))
                 robot.update(1 / UPDATE_RATE)
 
