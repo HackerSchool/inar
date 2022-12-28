@@ -1,4 +1,4 @@
-from state import State
+from .state import State
 
 class Robot:
     """
@@ -10,7 +10,6 @@ class Robot:
         self.targetState = State()
         self.actualState = State()
         self.frame = None
-        self.socket = None
 
     def update(self, deltaT):
         """
