@@ -1,0 +1,2 @@
+pip3 install vosk
+pip3 install pyaudio
