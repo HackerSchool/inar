@@ -1,13 +1,14 @@
-from core import Parser, Robot, Protocol
+from core import Parser, Robot, Protocol, window
 from constants import UPDATE_RATE
 from control import MimicBehaviour
+
+from multiprocessing import Process
 
 import cv2
 import time
 
 def run(options):
     """The main entry point for the controller."""
-
     robot = Robot()
     protocol = Protocol(not options["viewer"], not options["receiver"])
     behaviour = MimicBehaviour()
@@ -25,6 +26,11 @@ def run(options):
 
     if not options["viewer"]:
         cap = cv2.VideoCapture(0)
+
+    if options["window"]:
+        p = Process(target=window.run_window, args=(robot,))
+        p.start()
+        p.join()
 
     # Then, run the main loop.
     start = time.time()
@@ -59,6 +65,8 @@ def run(options):
             # Update servos
             if options["servos"]:
                 pass # TODO: update the servos.
+
+
 
 if __name__ == "__main__":
     parser = Parser()
