@@ -18,13 +18,12 @@ def run(options):
     if not options["single"]:
         # Setup connection.
         if options["ip"] is not None:
-            #protocol.connect(options["ip"], options["port"])
-            pass
+            protocol.connect(options["ip"], options["port"])
         else:
-            #protocol.listen(options["port"])
-            pass
+            protocol.listen(options["port"])
     elif options["receiver"] or options["viewer"]:
-        raise RuntimeError("In single mode state and frames can't be received.")
+        #raise RuntimeError("In single mode state and frames can't be received.")
+        pass
 
     if not options["viewer"]:
         cap = cv2.VideoCapture(0)
