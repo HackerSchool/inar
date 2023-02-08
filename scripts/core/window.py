@@ -1,5 +1,6 @@
 import pygame
 import math
+from .state import Servo 
 
 LEFT_EYE_CENTER = (320,400)
 RIGHT_EYE_CENTER = (480,400)
@@ -13,11 +14,6 @@ ANGLE_OF_STATE_UNIT = EYE_RADIUS / 180
 
 Z_PLANE = 1000
 
-SERVO_L_EYE_X = 1
-SERVO_L_EYE_Y = 2
-
-SERVO_R_EYE_X = 3
-SERVO_R_EYE_Y = 4
 
 def draw_eye(win,eye_x, eye_y, robot, position):
         new_x, new_y = pygame.mouse.get_pos() # Gets mouse position
@@ -32,11 +28,11 @@ def draw_eye(win,eye_x, eye_y, robot, position):
         # robot
 
         if position == "left":
-            new_x =  robot_state.getPosition(SERVO_L_EYE_X) * ANGLE_OF_STATE_UNIT
-            new_y =  robot_state.getPosition(SERVO_L_EYE_Y) * ANGLE_OF_STATE_UNIT
+            new_x =  robot_state.getPosition(Servo.L_EYE_X) * ANGLE_OF_STATE_UNIT
+            new_y =  robot_state.getPosition(Servo.L_EYE_Y) * ANGLE_OF_STATE_UNIT
         if position == "right":
-            new_x =  robot_state.getPosition(SERVO_R_EYE_X) * ANGLE_OF_STATE_UNIT
-            new_y =  robot_state.getPosition(SERVO_R_EYE_Y) * ANGLE_OF_STATE_UNIT
+            new_x =  robot_state.getPosition(Servo.R_EYE_X) * ANGLE_OF_STATE_UNIT
+            new_y =  robot_state.getPosition(Servo.R_EYE_Y) * ANGLE_OF_STATE_UNIT
         else:
             print("Error, that eye does not exist")
 
@@ -63,17 +59,11 @@ def draw_eye(win,eye_x, eye_y, robot, position):
         # to the mouse.
 
         norm_u = math.sqrt(distance_x**2 + distance_y**2 + Z_PLANE**2)
-
         calc_aux = Z_PLANE/norm_u
-
         theta = math.asin(calc_aux) # in radians
-
         true_distance = norm_u * math.cos(theta)
 
-        print(math.cos(theta))
-
         distance = min(true_distance, PUPIL_LIMIT)
-
 
         angle = math.atan2(distance_y, distance_x) # angle for rotation
         pupil_x = eye_x + (math.cos(angle) * distance) # position of pupil of the eye in axis X
@@ -86,24 +76,3 @@ def draw_face(win,robot):
     pygame.draw.rect(surface=win, color=(255,229,204), rect= (250, 250, 300, 300) )  
     draw_eye(win,320, 400, robot, "left") # left eye
     draw_eye(win,480, 400, robot, "right") # right eye
-
-def run_window(robot):
-    pygame.init()
-
-    win = pygame.display.set_mode((800,800))
-    pygame.display.set_caption("INAR Simulator")
-
-    run = True
-
-    while run:
-        pygame.time.delay(100)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-        
-        win.fill((255,255,255))  # Fills with the colors inside
-        draw_face(win, robot)
-        pygame.display.update() 
-        
-    pygame.quit()
