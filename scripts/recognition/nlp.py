@@ -3,25 +3,71 @@ import spacy
 # ---------------- Pre-processing ---------------
 #https://pyspellchecker.readthedocs.io/en/latest/
 
-from spellchecker import SpellChecker
+# from spellchecker import SpellChecker
 
-spell = SpellChecker()
+# spell = SpellChecker()
 
-def correct_text(text):
-    corrected_text = []
-    phrase = text.split()
-    for word in phrase:
-        print(word)
-        corrected_word = spell.correction(word)
-        print(corrected_word)
-        corrected_text.append(corrected_word)
-    return " ".join(corrected_text)
+# def correct_text(text):
+#     corrected_text = []
+#     phrase = text.split()
+#     for word in phrase:
+#         print(word)
+#         corrected_word = spell.correction(word)
+#         print(corrected_word)
+#         corrected_text.append(corrected_word)
+#     return " ".join(corrected_text)
 
-#testing
-phrase = "hell my neme is Rita. I am portgese"
-print(correct_text(phrase))
+# #testing
+# phrase = "hell my neme is Rita. I am portgese"
+# print(correct_text(phrase))
 
 # ------------------ Correct words according to context --------
+
+# import sparknlp
+
+# spark = sparknlp.start()
+
+# from sparknlp.base import *
+# from sparknlp.annotator import *
+# from sparknlp.common import *
+# from pyspark.ml import Pipeline
+# import pandas as pd
+
+# documentAssembler = DocumentAssembler()\
+#     .setInputCol("text")\
+#     .setOutputCol("document")
+
+# tokenizer = RecursiveTokenizer()\
+#     .setInputCols(["document"])\
+#     .setOutputCol("token")\
+#     .setPrefixes(["\"", "(", "[", "\n"])\
+#     .setSuffixes([".", ",", "?", ")","!", "'s"])
+
+# spellModel = ContextSpellCheckerModel\
+#     .pretrained('spellcheck_dl')\
+#     .setInputCols("token")\
+#     .setOutputCol("checked")\
+#     .setErrorThreshold(4.0)\
+#     .setTradeoff(6.0)
+
+# finisher = Finisher()\
+#     .setInputCols("checked")
+
+# pipeline = Pipeline(stages = [
+#     documentAssembler,
+#     tokenizer,
+#     spellModel,
+#     finisher])
+
+# empty_ds = spark.createDataFrame([[""]]).toDF("text")
+# lp = LightPipeline(pipeline.fit(empty_ds))
+
+# lp.annotate("Please alliow me tao introdduce myhell, I am a man of waelth und tiasted")
+
+
+
+
+# ------------------ NLP ------------------------
 
 #https://spacy.io/usage/spacy-101
 
