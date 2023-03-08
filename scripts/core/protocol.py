@@ -27,7 +27,7 @@ class Protocol:
         while True:
             # Get socket.
             server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            server.bind((socket.gethostname(), port))
+            server.bind(('', port))
             print(f"Listening on {socket.gethostname()}:{port}")
             server.listen()
             (client, (ip, _)) = server.accept()
