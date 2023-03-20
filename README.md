@@ -1,15 +1,12 @@
-# HS Expressions
+# INAR - INAR is Not A Robot
 
 This project aims to build a robotic head which can reproduce human emotions
 and expressions.
 
-## Features
+## Setup
 
-A *Raspberry Pi 4 model B*, with *NixOS*, is used to control the robot. *NixOS*
-is used since it allows us to configure the *Raspberry* declaratively (and why
-not?).
-
-TODO
+The script at `scripts/setup.py` will download the necessary data sets to the
+data directory.
 
 ## Team
 
