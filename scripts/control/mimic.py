@@ -1,6 +1,7 @@
 from .behaviour import Behaviour
 from .emotion import EmotionBehaviour, Emotion
 from core import Robot, State
+from recognition import faceFromImage
 
 class MimicBehaviour(Behaviour):
     """
@@ -15,4 +16,5 @@ class MimicBehaviour(Behaviour):
         # TODO: detect features of the person's face (e.g. eyes open/closed, direction)
         # TODO: make the robot imitate these features
         state = robot.getActualState() # placeholder while the behaviour is not implemented
+        face = faceFromImage(robot.getFrame())
         return state.mix(self.emotion.update(robot), 0.5)
