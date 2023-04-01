@@ -1,4 +1,5 @@
 from enum import Enum
+from adafruit_servokit import ServoKit
 
 class Servo(Enum):
     """Enum for identifying servos."""
@@ -11,7 +12,7 @@ class State:
     """Holds the state of the robot's servos."""
 
     def __init__(self):
-        self.positions = [0 for servo in Servo]
+        self.positions = ServoKit(channels=16)
 
     def lookAt(self, point: (float, float, float)):
         """
@@ -47,8 +48,9 @@ class State:
 
     def setPosition(self, servo, position):
         """Sets the position of a servo."""
-        self.positions[servo.value] = position
+        self.positions.servo[servo.value] = position
 
     def getPosition(self, servo):
         """Gets the position of a servo."""
-        return self.positions[servo.value]
+        #TODO: na documentação não mencionam a leitura do ângulo, por isso não sei se isto funciona
+        return self.positions.servo[servo.value]
