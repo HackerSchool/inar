@@ -1,8 +1,0 @@
-#speech recognition
-pip3 install vosk
-pip3 install pyaudio
-
-#nlp 
-pip install -U pip setuptools wheel
-pip install -U spacy
-python -m spacy download en_core_web_sm

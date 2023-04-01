@@ -2,26 +2,21 @@
 # from .phrase import Phrase
 
 from vosk import Model, KaldiRecognizer
+
 import pyaudio
 import json
 
-def captureAudio():
-    model = Model(r"./vosk-model-small-en-us-0.15") 
-    recognizer = KaldiRecognizer(model,  16000) #TODO: search the frequency and the class
-
-    # Recognize from microphone
-    capture = pyaudio.PyAudio()
-    stream = capture.open(format= pyaudio.paInt16, channels=1, rate= 16000, input=True, frames_per_buffer=8192)
-    stream.start_stream()
-
-    return Audio(stream, recognizer)
+import signal
+import sys
 
 
 class Audio():
     
-    def __init__(self, stream, recognizer) -> None:
-        self.stream = stream
-        self.recognizer = recognizer
+    def __init__(self):
+        self.model = Model("../../data/vosk-model-small-en-us-0.15") 
+        self.recognizer = KaldiRecognizer(self.model,  16000)
+        self.stream = pyaudio.PyAudio().open(format= pyaudio.paInt16, channels=1, rate= 16000, input=True, frames_per_buffer=8192)
+        self.stream.start_stream()
 
     # def emotionFromAudio(self) -> Emotion:
     #     """
@@ -33,28 +28,21 @@ class Audio():
 
     def phraseFromAudio(self):
         """
-        Extracts the phrase from a voice.
+        Extracts the phrase from the audio.
         """
-        text = ""
-
+        phrase = ""
         while True:
-            data = self.stream.read(4096)
-            if self.recognizer.AcceptWaveform(data):
-                #https://github.com/alphacep/vosk-api/blob/master/python/test/transcribe_scp.py
-                res = json.loads(self.recognizer.Result()) 
-                #text += " " + res["text"]
-                text = res["text"]
-                print(text)
+            try:
+                data = self.stream.read(4096)
+                if self.recognizer.AcceptWaveform(data):
+                    res = json.loads(self.recognizer.Result())
+                    phrase = res["text"]
+                    print(phrase)
+            except KeyboardInterrupt:
+                break
 
-        #phrase = Phrase.UNKNOWN
-        # TODO: stop at end of x time or at bye/stop instruction
-
-        #return phrase
+        return phrase
 
 
-# def main():
-#     audio = captureAudio()
-
-#     audio.phraseFromAudio()
-
-# main()
+audio = Audio()
+audio.phraseFromAudio()
