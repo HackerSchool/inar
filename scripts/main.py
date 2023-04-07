@@ -1,5 +1,5 @@
-from core import Parser, Robot, Protocol, window
-from constants import UPDATE_RATE
+from core import Parser, Robot, Protocol, window, State
+from constants import *
 from control import MimicBehaviour
 
 import pygame
@@ -12,6 +12,7 @@ def run(options):
     robot = Robot()
     protocol = Protocol(not options["viewer"], not options["receiver"])
     behaviour = MimicBehaviour()
+    state = State()
 
     # TODO: allow changing the mode of the robot, e.g. using the protocol
 
@@ -32,7 +33,7 @@ def run(options):
         run = True
         pygame.init()
 
-        win = pygame.display.set_mode((800,800))
+        win = pygame.display.set_mode((DIMENSION_X,DIMENSION_Y))
         pygame.display.set_caption("INAR Simulator")
 
     # Then, run the main loop.

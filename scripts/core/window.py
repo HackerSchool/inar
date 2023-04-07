@@ -1,6 +1,7 @@
 import pygame
 import math
-from .state import Servo 
+from state import Servo 
+from constants import * 
 
 LEFT_EYE_CENTER = (320,400)
 RIGHT_EYE_CENTER = (480,400)
@@ -15,28 +16,29 @@ ANGLE_OF_STATE_UNIT = EYE_RADIUS / 180
 Z_PLANE = 1000
 
 
+
+
 def draw_eye(win,eye_x, eye_y, robot, position):
-        new_x, new_y = pygame.mouse.get_pos() # Gets mouse position
+        # new_x, new_y = pygame.mouse.get_pos() # Gets mouse position
 
         #TODO: State needs to be initialized when the program runs, 
         # otherwhise it is not possible to run the scrip bellow
 
-        """ 
+
         robot_state =  robot.getActualState()
         # Checks which eye it is, and updates the new position of the pupil
         # This new position is based on the angle given to the servos of the
         # robot
 
         if position == "left":
-            new_x =  robot_state.getPosition(Servo.L_EYE_X) * ANGLE_OF_STATE_UNIT
-            new_y =  robot_state.getPosition(Servo.L_EYE_Y) * ANGLE_OF_STATE_UNIT
+            new_x =  robot_state.getPosition(Servo.L_EYE_X) * ANGLE_OF_STATE_UNIT * DIMENSION_X
+            new_y =  robot_state.getPosition(Servo.L_EYE_Y) * ANGLE_OF_STATE_UNIT * DIMENSION_Y
         if position == "right":
             new_x =  robot_state.getPosition(Servo.R_EYE_X) * ANGLE_OF_STATE_UNIT
             new_y =  robot_state.getPosition(Servo.R_EYE_Y) * ANGLE_OF_STATE_UNIT
         else:
             print("Error, that eye does not exist")
 
-        """
 
         distance_x = new_x - eye_x
         distance_y = new_y - eye_y
