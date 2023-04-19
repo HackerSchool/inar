@@ -12,9 +12,27 @@ class MimicBehaviour(Behaviour):
         self.emotion = EmotionBehaviour()
 
     def update(self, robot: Robot) -> State:
-        # TODO: perceive the emotion of the person in front of the robot
-        # TODO: detect features of the person's face (e.g. eyes open/closed, direction)
-        # TODO: make the robot imitate these features
+        # Perceive the emotion of the person in front of the robot
+        person_emotion = perceive_emotion(robot)
+
+        # Detect features of the person's face (e.g. eyes open/closed, direction)
+        person_features = detect_face_features(robot)
+
+        # Make the robot imitate these features
+        imitate_features(robot, person_features)
+
         state = robot.getActualState() # placeholder while the behaviour is not implemented
         face = faceFromImage(robot.getFrame())
         return state.mix(self.emotion.update(robot), 0.5)
+
+    def perceive_emotion(robot: Robot) -> Emotion:
+        # TODO: Implement emotion perception using the robot's sensors
+        return Emotion.neutral
+
+    def detect_face_features(robot: Robot) -> dict:
+        # TODO: Implement face feature detection using the robot's sensors
+        return {}
+
+    def imitate_features(robot: Robot, features: dict):
+        # TODO: Implement feature imitation using the robot's actuators
+        pass

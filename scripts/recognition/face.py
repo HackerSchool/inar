@@ -8,6 +8,9 @@ class Feature(Enum):
     R_EYE_Y    = 3 # -90º to 90º
     L_EYE_OPEN = 4 # 0 to 1
     R_EYE_OPEN = 5 # 0 to 1
+    L_LID      = 6 # 0 to 1
+    R_LID      = 7 # 0 to 1
+
 
 class Face:
     """

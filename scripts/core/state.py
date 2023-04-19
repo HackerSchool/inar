@@ -6,7 +6,9 @@ class Servo(Enum):
     L_EYE_Y = 1 # -90º to 90º
     R_EYE_X = 2 # -90º to 90º
     R_EYE_Y = 3 # -90º to 90º
-
+    L_LID   = 4 # 0 to 1
+    R_LID   = 5 # 0 to 1
+    
 class State:
     """Holds the state of the robot's servos."""
 

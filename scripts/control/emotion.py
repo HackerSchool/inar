@@ -17,5 +17,20 @@ class EmotionBehaviour(Behaviour):
         self.emotion = emotion
 
     def update(self, robot: Robot) -> State:
-        # TODO: change the state of the robot according to the emotion
+        # Change the state of the robot according to the emotion
+        if self.emotion == Emotion.NEUTRAL:
+            # TODO: implement the neutral behavior
+            pass
+        elif self.emotion == Emotion.HAPPY:
+            # TODO: implement the happy behavior
+            pass
+        elif self.emotion == Emotion.SAD:
+            # TODO: implement the sad behavior
+            pass
+        elif self.emotion == Emotion.ANGRY:
+            # TODO: implement the angry behavior
+            pass
+        elif self.emotion == Emotion.SURPRISED:
+            # TODO: implement the surprised behavior
+            pass
         return robot.getActualState()
