@@ -95,6 +95,9 @@ if __name__ == "__main__":
     parser.add("receiver", "If set, will receive state instead of calculating it.", default=False)
     parser.add("viewer", "If set, will receive frames instead of capturing them.", default=False)
     parser.add("single", "If set, won't listen for connections.", default=False)
+
+    parser.add("debug", "If set, it will show all the debug features on window", default=False)
+
     options = parser.parse()
     if options["help"]:
         print(parser.help())

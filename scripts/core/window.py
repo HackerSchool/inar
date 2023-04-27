@@ -3,6 +3,9 @@ import math
 from state import Servo 
 from constants import * 
 
+# TODO: turn this into a class, move things from main
+
+
 LEFT_EYE_CENTER = (320,400)
 RIGHT_EYE_CENTER = (480,400)
 
@@ -14,9 +17,6 @@ PUPIL_LIMIT = 30 # EYE_RADIUS - PUPIL_RADIUS - 5 Pixels, so the pupil is not in 
 ANGLE_OF_STATE_UNIT = EYE_RADIUS / 180
 
 Z_PLANE = 1000
-
-
-
 
 def draw_eye(win,eye_x, eye_y, robot, position):
         # new_x, new_y = pygame.mouse.get_pos() # Gets mouse position
@@ -78,3 +78,9 @@ def draw_face(win,robot):
     pygame.draw.rect(surface=win, color=(255,229,204), rect= (250, 250, 300, 300) )  
     draw_eye(win,320, 400, robot, "left") # left eye
     draw_eye(win,480, 400, robot, "right") # right eye
+
+def draw_label():
+    pass
+
+def draw_slider():
+    pass
