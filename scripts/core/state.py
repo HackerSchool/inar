@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Tuple
 
 class Servo(Enum):
     """Enum for identifying servos."""
@@ -6,14 +7,16 @@ class Servo(Enum):
     L_EYE_Y = 1 # -90º to 90º
     R_EYE_X = 2 # -90º to 90º
     R_EYE_Y = 3 # -90º to 90º
-
+    L_LID   = 4 # 0 to 1
+    R_LID   = 5 # 0 to 1
+    
 class State:
     """Holds the state of the robot's servos."""
 
     def __init__(self):
         self.positions = [0 for servo in Servo]
 
-    def lookAt(self, point: (float, float, float)):
+    def lookAt(self, point: Tuple[float, float, float]):
         """
         Rotates the eye servos so that they point at a specific point.
         The coordinate system of the point is such that X is right, Y is up, Z
