@@ -1,6 +1,6 @@
 import pygame
 import math
-from state import Servo 
+#from state import Servo 
 from constants import * 
 
 # TODO: turn this into a class, move things from main
@@ -19,7 +19,7 @@ ANGLE_OF_STATE_UNIT = EYE_RADIUS / 180
 Z_PLANE = 1000
 
 def draw_eye(win,eye_x, eye_y, robot, position):
-        # new_x, new_y = pygame.mouse.get_pos() # Gets mouse position
+        new_x, new_y = pygame.mouse.get_pos() # Gets mouse position
 
         #TODO: State needs to be initialized when the program runs, 
         # otherwhise it is not possible to run the scrip bellow
@@ -29,7 +29,7 @@ def draw_eye(win,eye_x, eye_y, robot, position):
         # Checks which eye it is, and updates the new position of the pupil
         # This new position is based on the angle given to the servos of the
         # robot
-
+        """
         if position == "left":
             new_x =  robot_state.getPosition(Servo.L_EYE_X) * ANGLE_OF_STATE_UNIT * DIMENSION_X
             new_y =  robot_state.getPosition(Servo.L_EYE_Y) * ANGLE_OF_STATE_UNIT * DIMENSION_Y
@@ -38,7 +38,7 @@ def draw_eye(win,eye_x, eye_y, robot, position):
             new_y =  robot_state.getPosition(Servo.R_EYE_Y) * ANGLE_OF_STATE_UNIT * DIMENSION_Y
         else:
             print("Error, that eye does not exist")
-
+        """
 
         distance_x = new_x - eye_x
         distance_y = new_y - eye_y
@@ -79,8 +79,23 @@ def draw_face(win,robot):
     draw_eye(win,320, 400, robot, "left") # left eye
     draw_eye(win,480, 400, robot, "right") # right eye
 
-def draw_label():
-    pass
+    pygame.draw.line(win, (0,0,0), (650, 0), (650, 800))
+    pygame.display.flip()
+
+    draw_text(win,"Debug:", 32)
+
+def draw_text(win, text, fontsize):
+    # Initialize the font system and create the font and font renderer
+    pygame.font.init()
+    default_font = pygame.font.get_default_font()
+    font_renderer = pygame.font.Font(default_font, fontsize)
+    # To create a surface containing `Some Text`
+    label = font_renderer.render(
+        text,   # The font to render
+        1,             # With anti aliasing
+        (0,0,0)) # RGB Color
+    
+    win.blit(label, (700,75))
 
 def draw_slider():
     pass

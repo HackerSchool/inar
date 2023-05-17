@@ -61,10 +61,11 @@ def run(options):
                 protocol.update(robot)
 
             # Update the robot state, if we're not receiving it.
-            if not options["receiver"]:
-                frame = robot.getFrame()
-                robot.setTargetState(behaviour.update(robot))
-                robot.update(1 / UPDATE_RATE)
+            #if not options["receiver"]:
+                #frame = robot.getFrame()
+                #robot.setTargetState(behaviour.update(robot))
+                #robot.update(1 / UPDATE_RATE)
+                
 
             # Update servos
             if options["servos"]:
