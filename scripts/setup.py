@@ -1,12 +1,24 @@
 from core import Parser
+from zipfile import ZipFile
 
 import os
 import requests
+
+import sys
+import subprocess #https://docs.python.org/3/library/subprocess.html
+
 
 # Files to download into the data directory.
 FILES = [
     "https://raw.githubusercontent.com/kipr/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml",
     "https://raw.githubusercontent.com/kipr/opencv/master/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml",
+    "https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip"
+]
+
+PACKAGES = [
+    "vosk", 
+    "spacy", 
+    "PyAudio"
 ]
 
 def setup(dataDir):
@@ -28,6 +40,28 @@ def setup(dataDir):
         filename = os.path.basename(file)
         path = os.path.join(dataDir, filename)
         open(path, "wb").write(response.content)
+    
+    # Loading the temp.zip and creating a zip object
+    with ZipFile("../data/vosk-model-small-en-us-0.15.zip", 'r') as zObject:
+    
+        # Extracting the zip
+        zObject.extractall(path="../data")
+    
+    # Delete the zip file
+    os.remove("../data/vosk-model-small-en-us-0.15.zip")
+
+    
+def install_packages():
+    """Install the required python libraries."""
+
+    for package in PACKAGES:
+        print("Downloading python library {}...".format(package))
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package], stdout=subprocess.DEVNULL)
+        except Exception as e:
+            print("Failed to download library {}".format(package))
+            print("Exception {}".format(e))
+
 
 if __name__ == "__main__":
     # Default data directory is `../data` relative to this file.
@@ -42,3 +76,4 @@ if __name__ == "__main__":
         print(parser.help())
     else:
         setup(options["data"])
+        install_packages()
