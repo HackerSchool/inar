@@ -1,4 +1,4 @@
-from core import Parser, Robot, Protocol, window, State
+from core import Parser, Robot, Protocol, State, Debug, Window
 from constants import *
 from control import MimicBehaviour
 
@@ -30,11 +30,12 @@ def run(options):
         cap = cv2.VideoCapture(0)
 
     if options["window"]:
-        run = True
-        pygame.init()
-
-        win = pygame.display.set_mode((DIMENSION_X,DIMENSION_Y))
-        pygame.display.set_caption("INAR Simulator")
+        if options["debug"]:
+            debug = Debug(robot, state)
+            debug.add_label("rui",0.2,False)
+        else:
+            debug = ""
+        window = Window(DIMENSION_X, DIMENSION_Y, robot, debug)
 
     # Then, run the main loop.
     start = time.time()
@@ -72,18 +73,7 @@ def run(options):
                 pass # TODO: update the servos.
 
             if options["window"]:
-                pygame.time.delay(100)
-
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        print("Quitting... Sya :)")
-                        run = False
-
-                if not run:
-                    break
-                win.fill((255,255,255))  # Fills with the colors inside
-                window.draw_face(win, robot)
-                pygame.display.update() 
+                window.run()
 
 
 if __name__ == "__main__":
