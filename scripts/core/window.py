@@ -35,6 +35,8 @@ class Window:
         self.robot= _robot
         self.win = pygame.display.set_mode((x_dimension,y_dimension))
         pygame.display.set_caption("INAR Simulator")
+        
+        self.sliders = []
 
     def draw_eye(self, eye_x, eye_y, robot, position):
             new_x, new_y = pygame.mouse.get_pos() # Gets mouse position
@@ -93,12 +95,12 @@ class Window:
             pygame.draw.circle(surface=self.win, center=(pupil_x, pupil_y), radius=PUPIL_RADIUS, color=(0, 255, 255)) # draw pupil
 
     def draw_face(self,robot):
-        pygame.draw.rect(surface=self.win, color=(255,229,204), rect= (250, 250, 300, 300) )  
-        self.draw_eye(320, 400, robot, "left") # left eye
-        self.draw_eye(480, 400, robot, "right") # right eye
+        pygame.draw.rect(surface=self.win, color=(255,229,204), rect= (190, 250, 300, 300) )  
+        self.draw_eye(260, 400, robot, "left") # left eye
+        self.draw_eye(420, 400, robot, "right") # right eye
 
-        pygame.draw.line(self.win, (0,0,0), (650, 0), (650, 800))
-        pygame.display.flip()
+        pygame.draw.line(self.win, (0,0,0), (680, 0), (680, 800))
+        #pygame.display.flip()
 
         self.draw_text("Debug:", 32, 100)
 
@@ -115,15 +117,26 @@ class Window:
         
         self.win.blit(label, (700,y_position))
 
-    def draw_slider(self,uppperValue,downValue,step,y_position):
-        slider = Slider(self.win, 700, y_position, 150, 10, min=downValue, max=uppperValue, step=step)
+    def draw_slider(self,upperValue,downValue,step,y_position):
+        slider = Slider(self.win, 700, y_position, 150, 10, min=downValue, max=upperValue, step=step)
+
+        self.sliders.append(slider)
+
+    def draw_slider_title(self, name, y_position, index):
+        self.draw_text( name + ": " + str(self.sliders[index].getValue()), 14, y_position-20)
 
     def run(self):
         pygame.init()
         pygame.time.delay(100)
 
         # x_start, y_start, widht_dimension, radius_dimension,
-        slider = Slider(self.win, 700, 0, 150, 10, min=0, max=5, step=1)
+        #slider = Slider(self.win, 700, 200, 150, 10, min=0, max=5, step=1)
+        
+        for slider in self.debug.all_sliders():
+                    self.draw_slider(slider["upperValue"], 
+                    slider["downValue"], 
+                    slider["step"], 
+                    slider["position"])
 
         while True:
             events = pygame.event.get()
@@ -139,12 +152,16 @@ class Window:
             
             self.draw_face(self.robot)
             
-            pygame_widgets.update(events)
-            
             if self.debug != "":
                 for label in self.debug.all_labels():
-                    self.draw_text(label["name"] + ": " + str(label["value"]) ,14, label["position"])
+                    self.draw_text(label["name"] + ": " + str(label["value"]) ,18, label["position"])
+
+                for idx,slider in enumerate(self.debug.all_sliders()):
+                    self.draw_slider_title(slider["name"], slider["position"], idx)
+                
             
             
+            
+            pygame_widgets.update(events)
             pygame.display.update() 
          

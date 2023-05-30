@@ -15,31 +15,43 @@ class Debug:
 
         self.labels = []
         self.sliders = []
-        self.y_position = 150
+        self.y_position = 120
 
     def add_label(self, name:str, variable:float, display:bool):
+
+        for label in self.labels:
+            if label["name"] == name:
+                label["value"] = variable
+                return
+
+        self.y_position += 40
         self.labels.append({'name':name,'value':variable,'display':display, 'position':self.y_position})
-        self.y_position += 50
+        return
 
     def list_labels(self):
         for label in self.labels:
-            print(f'{label.name}: {label.value}')
+            print(f'{label["name"]}: {label["value"]}')
+        return
 
     def all_labels(self):
         return self.labels
-    
-    def updateLabel(self):
-        # Create thread that listens and updates
-        # the values of the variable
-        pass
 
-    def add_slider(self, name:str, options:list, upperValue:float, downValue:float, step:float ):
-        self.sliders.append({'name':name,'value':options,
-                            'upperValue':upperValue, 'downValue':downValue, 'step':step})
+    def add_slider(self, name:str, value:list, upperValue:float, downValue:float, step:float ):
+
+        for slide in self.sliders:
+            if slide["name"] == name:
+                slide["value"] = value
+                return
+
+        self.y_position += 60
+        self.sliders.append({'name':name,'value':value,
+                            'upperValue':upperValue, 'downValue':downValue, 'step':step,'position':self.y_position})
         return
 
     def list_sliders(self):
-        pass
+        for slider in self.sliders:
+            print(f'{slider["name"]}: {slider["value"]}')
+        return
 
     def all_sliders(self):
-        pass
+        return self.sliders
