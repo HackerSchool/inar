@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Tuple
+import math
 
 class Servo(Enum):
     """Enum for identifying servos."""
@@ -23,8 +24,23 @@ class State:
         is forward. One unit is equal to the distance between the eyes' centers.
         The position between the eyes is (0, 0, 0).
         """
-        # TODO: Implement this
-        pass
+        x, y, z = point
+
+        # Calculates the horizontal angles for the left and right servos
+        angle_x_left = math.atan2(y, x - 1)
+        angle_x_right = math.atan2(y, x + 1)
+
+        # Calculate vertical angles for left and right eye servos
+        angle_y_left = math.atan2(z, math.sqrt(x ** 2 + y ** 2))
+        angle_y_right = math.atan2(z, math.sqrt(x ** 2 + y ** 2))
+
+        # Set the calculated angles in the servo positions
+        self.positions[Servo.L_EYE_X.value] = math.degrees(angle_x_left)
+        self.positions[Servo.R_EYE_X.value] = math.degrees(angle_x_right)
+        self.positions[Servo.L_EYE_Y.value] = math.degrees(angle_y_left)
+        self.positions[Servo.R_EYE_Y.value] = math.degrees(angle_y_right)
+
+        return x, y, z
 
     def mix(self, other, factor):
         """
