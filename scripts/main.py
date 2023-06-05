@@ -38,7 +38,7 @@ def run(options):
 
         else:
             debug = ""
-        window = Window(DIMENSION_X, DIMENSION_Y, robot, debug)
+        window = Window(DIMENSION_X, DIMENSION_Y, robot)
 
     # Then, run the main loop.
     start = time.time()

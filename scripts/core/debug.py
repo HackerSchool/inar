@@ -20,8 +20,8 @@ class Debug:
                 label["value"] = variable
                 return
 
-        self.y_position += 40
-        self.labels.append({'name':name,'value':variable,'display':display, 'position':self.y_position})
+        Debug.y_position += 40
+        self.labels.append({'name':name,'value':variable,'display':display, 'position':Debug.y_position})
         return
 
     def list_labels(self):
@@ -39,9 +39,9 @@ class Debug:
                 slide["value"] = value
                 return
 
-        self.y_position += 60
+        Debug.y_position += 60
         self.sliders.append({'name':name,'value':value,
-                            'upperValue':upperValue, 'downValue':downValue, 'step':step,'position':self.y_position})
+                            'upperValue':upperValue, 'downValue':downValue, 'step':step,'position':Debug.y_position})
         return
 
     def list_sliders(self):

@@ -28,10 +28,9 @@ Z_PLANE = 1000
 class Window:
 
 
-    def __init__(self, x_dimension, y_dimension, _robot: Robot, _debug: Debug):
+    def __init__(self, x_dimension, y_dimension, _robot: Robot):
         self.isRunning = True
-
-        self.debug = _debug
+        
         self.robot= _robot
         self.win = pygame.display.set_mode((x_dimension,y_dimension))
         pygame.display.set_caption("INAR Simulator")
@@ -132,7 +131,7 @@ class Window:
         # x_start, y_start, widht_dimension, radius_dimension,
         #slider = Slider(self.win, 700, 200, 150, 10, min=0, max=5, step=1)
         
-        for slider in self.debug.all_sliders():
+        for slider in Debug().all_sliders():
                     self.draw_slider(slider["upperValue"], 
                     slider["downValue"], 
                     slider["step"], 
@@ -152,12 +151,12 @@ class Window:
             
             self.draw_face(self.robot)
             
-            if self.debug != "":
-                for label in self.debug.all_labels():
-                    self.draw_text(label["name"] + ": " + str(label["value"]) ,18, label["position"])
+        
+            for label in Debug().all_labels():
+                self.draw_text(label["name"] + ": " + str(label["value"]) ,18, label["position"])
 
-                for idx,slider in enumerate(self.debug.all_sliders()):
-                    self.draw_slider_title(slider["name"], slider["position"], idx)
+            for idx,slider in enumerate(Debug().all_sliders()):
+                self.draw_slider_title(slider["name"], slider["position"], idx)
                 
             
             
