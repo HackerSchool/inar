@@ -31,11 +31,10 @@ def run(options):
 
     if options["window"]:
         if options["debug"]:
-            debug = Debug(robot, state)
-            debug.add_label("rui",0.2,False)
-            debug.add_label("rui1",0.2,False)
-            debug.add_slider("puto", 3, 5 ,0 ,1)
-            debug.add_slider("puto1", 3, 5 ,0 ,1)
+            Debug().add_label("rui",0.2,False)
+            Debug().add_label("rui1",0.2,False)
+            Debug().add_slider("puto", 3, 5 ,0 ,1)
+            Debug().add_slider("puto1", 3, 5 ,0 ,1)
 
         else:
             debug = ""

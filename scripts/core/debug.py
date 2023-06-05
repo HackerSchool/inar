@@ -9,13 +9,9 @@ class Debug:
         intented to debug
     """
 
-    def __init__(self, _robot:Robot, _state:State):
-        self.robot = _robot
-        self.state = _state
-
-        self.labels = []
-        self.sliders = []
-        self.y_position = 120
+    labels = []
+    sliders = []
+    y_position = 120
 
     def add_label(self, name:str, variable:float, display:bool):
 
