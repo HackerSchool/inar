@@ -1,16 +1,18 @@
-from core import Parser, Robot, Protocol
-from constants import UPDATE_RATE
+from core import Parser, Robot, Protocol, State, Debug, Window
+from constants import *
 from control import MimicBehaviour
+
+import pygame
 
 import cv2
 import time
 
 def run(options):
     """The main entry point for the controller."""
-
     robot = Robot()
     protocol = Protocol(not options["viewer"], not options["receiver"])
     behaviour = MimicBehaviour()
+    state = State()
 
     # TODO: allow changing the mode of the robot, e.g. using the protocol
 
@@ -21,10 +23,22 @@ def run(options):
         else:
             protocol.listen(options["port"])
     elif options["receiver"] or options["viewer"]:
-        raise RuntimeError("In single mode state and frames can't be received.")
+        #raise RuntimeError("In single mode state and frames can't be received.")
+        pass
 
     if not options["viewer"]:
         cap = cv2.VideoCapture(0)
+
+    if options["window"]:
+        if options["debug"]:
+            Debug().add_label("rui",0.2,False)
+            Debug().add_label("rui1",0.2,False)
+            Debug().add_slider("puto", 3, 5 ,0 ,1)
+            Debug().add_slider("puto1", 3, 5 ,0 ,1)
+
+        else:
+            debug = ""
+        window = Window(DIMENSION_X, DIMENSION_Y, robot)
 
     # Then, run the main loop.
     start = time.time()
@@ -51,14 +65,19 @@ def run(options):
                 protocol.update(robot)
 
             # Update the robot state, if we're not receiving it.
-            if not options["receiver"]:
-                frame = robot.getFrame()
-                robot.setTargetState(behaviour.update(robot))
-                robot.update(1 / UPDATE_RATE)
+            #if not options["receiver"]:
+                #frame = robot.getFrame()
+                #robot.setTargetState(behaviour.update(robot))
+                #robot.update(1 / UPDATE_RATE)
+                
 
             # Update servos
             if options["servos"]:
                 pass # TODO: update the servos.
+
+            if options["window"]:
+                window.run()
+
 
 if __name__ == "__main__":
     parser = Parser()
@@ -70,6 +89,9 @@ if __name__ == "__main__":
     parser.add("receiver", "If set, will receive state instead of calculating it.", default=False)
     parser.add("viewer", "If set, will receive frames instead of capturing them.", default=False)
     parser.add("single", "If set, won't listen for connections.", default=False)
+
+    parser.add("debug", "If set, it will show all the debug features on window", default=False)
+
     options = parser.parse()
     if options["help"]:
         print(parser.help())
